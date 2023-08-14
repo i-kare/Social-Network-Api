@@ -13,4 +13,6 @@ AS A social media startup I WANT an API for my social network that uses a NoSQL 
 - WHEN I test API POST and DELETE routes in Insomnia
 - THEN I am able to successfully create and delete reactions to thoughts and add and remove friends to a user’s friend list
 
+# Steps to run app
+
 # Walkthrough Video
