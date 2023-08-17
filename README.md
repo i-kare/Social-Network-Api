@@ -16,3 +16,6 @@ AS A social media startup I WANT an API for my social network that uses a NoSQL 
 # Steps to run app
 
 # Walkthrough Video
+
+# References
+Regex for email from Module 17 Challenge
