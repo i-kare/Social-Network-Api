@@ -14,6 +14,12 @@ AS A social media startup I WANT an API for my social network that uses a NoSQL 
 - THEN I am able to successfully create and delete reactions to thoughts and add and remove friends to a user’s friend list
 
 # Steps to run app
+1. Make sure your mongodb server is running
+2. For MacOsX its brew services start mongodb-community or brew services start mongodb
+3. Then run npm install
+4. Then run npm run start, when it is successful it will state API server is running on port 3001
+5. Make some calls to the following endpoints TODO
+6. Then ctrl C to close application and make sure to stop mongodb by using command brew services stop mongodb
 
 # Walkthrough Video
 
