@@ -8,7 +8,8 @@ router.get('/', async (req, res) => {
     try {
         const thoughts = await Thought.find();
         res.json(thoughts);
-    } catch(err) {
+    } catch (err) {
+        console.log(err)
         res.status(500).json(err);
     }
 });
@@ -16,9 +17,10 @@ router.get('/', async (req, res) => {
 // Get /api/thoughts/:id - get a single thought by its _id
 router.get('/:thoughtId', async (req, res) => {
     try {
-        const thought = await Thought.findOne({_id: req.params.thoughtId});
+        const thought = await Thought.findOne({ _id: req.params.thoughtId });
         res.json(thought);
-    } catch(err) {
+    } catch (err) {
+        console.log(err)
         res.status(500).json(err);
     }
 });
@@ -29,12 +31,13 @@ router.post('/', async (req, res) => {
         const thought = await Thought.create(req.body);
         const userID = req.body.userId;
         User.findOneAndUpdate(
-            {_id: userID},
-            {$push: {thoughts: thought._id}},
-            {new: true}
+            { _id: userID },
+            { $push: { thoughts: thought._id } },
+            { new: true }
         )
         res.json(thought);
-    } catch(err) {
+    } catch (err) {
+        console.log(err)
         res.status(500).json(err);
     }
 
@@ -43,18 +46,19 @@ router.post('/', async (req, res) => {
 // PUT /api/thoughts/:id - update a thought by its _id
 router.put('/:id', async (req, res) => {
     try {
-        const thought = await Thought.findOneAndUpdate( 
-            {_id: req.params.id},
-            {$set: req.body},
-            {runValidators: true, new: true}
+        const thought = await Thought.findOneAndUpdate(
+            { _id: req.params.id },
+            { $set: req.body },
+            { runValidators: true, new: true }
         );
 
         if (!thought) {
             return res.status(404).json({ message: 'No thoughts with this id!' });
-          }
-        
-          res.json(thought)
-    } catch(err) {
+        }
+
+        res.json(thought)
+    } catch (err) {
+        console.log(err)
         res.status(500).json(err);
     }
 });
@@ -62,13 +66,43 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/thoughts/:id - delete a thought by its _id
 router.delete('/:id', async (req, res) => {
     try {
-        const thought = await Thought.findOneAndDelete({_id: req.params.id});
+        const thought = await Thought.findOneAndDelete({ _id: req.params.id });
 
-        if(!thought){
-            return res.status(404).json({message: 'No thoughts with this id!'});
+        if (!thought) {
+            return res.status(404).json({ message: 'No thoughts with this id!' });
         }
         res.json(thought);
     } catch (err) {
+        console.log(err)
+        res.status(500).json(err);
+    }
+});
+
+// POST to create a reaction stored in a single thought's reactions array field
+router.post('/:thoughtId/reactions', async (req, res) => {
+    try {
+        const reaction = await Thought.findOneAndUpdate({ _id: req.params.thoughtId }, { $addToSet: { reactions: req.body } }, { runValidators: true, new: true });
+        if (!reaction) {
+            return res.status(404).json({ message: 'No thoughts with this id!' });
+        }
+        res.json(reaction);
+    } catch (err) {
+        res.status(500).json(err);
+        console.log(err)
+    }
+
+});
+
+// DELETE to pull and remove a reaction by the reaction's reactionId value
+router.delete('/:thoughtId/reactions/:reactionId', async (req, res) => {
+    try {
+        const reaction = await Thought.findOneAndUpdate({ _id: req.params.thoughtId }, { $pull: { reactions: { reactionId: req.params.reactionId } } }, { runValidators: true, new: true });
+        if (!reaction) {
+            return res.status(404).json({ message: 'No thoughts with this id!' });
+        }
+        res.json(reaction);
+    } catch (err) {
+        console.log(err)
         res.status(500).json(err);
     }
 });
