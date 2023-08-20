@@ -27,7 +27,7 @@ module.exports = {
     async createUser(req, res) {
         try {
             const user = await User.create(req.body);
-            return res.json(user);
+            return res.json({ message: 'User created!'});
         } catch (err) {
             console.log(err);
             res.status(500).json(err);
@@ -43,7 +43,7 @@ module.exports = {
                 return res.status(404).json({ message: 'No users with this id!' });
             }
     
-            return res.json(user);
+            return res.json({ message: 'User updated!' });
         } catch (err) {
             console.log(err);
             res.status(500).json(err)
@@ -77,7 +77,7 @@ module.exports = {
                 return res.status(404).json({ message: 'No users with this id!' });
             }
     
-            return res.json(user);
+            return res.json({ message: 'Friend added!' });
         } catch (err) {
             console.log(err);
             res.status(500).json(err);
@@ -92,6 +92,8 @@ module.exports = {
             if (!user) {
                 return res.status(404).json({ message: 'No users with this id!' });
             }
+
+            return res.json({ message: 'Friend deleted!' });
         } catch (err) {
             console.log(err);
             res.status(500).json(err);
