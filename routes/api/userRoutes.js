@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
         const users = await User.find();
         return res.json(users);
     } catch (err) {
+        console.log(err);
         res.status(500).json(err);
     }
 });
@@ -19,6 +20,7 @@ router.get('/:id', async (req, res) => {
         const user = await User.findOne({ _id: req.params.id }).populate('friends').populate('thoughts');
         return res.json(user);
     } catch (err) {
+        console.log(err);
         res.status(500).json(err);
     }
 });
@@ -29,6 +31,7 @@ router.post('/', async (req, res) => {
         const user = await User.create(req.body);
         return res.json(user);
     } catch (err) {
+        console.log(err);
         res.status(500).json(err);
     }
 });
@@ -44,6 +47,7 @@ router.put('/:id', async (req, res) => {
 
         return res.json(user);
     } catch (err) {
+        console.log(err);
         res.status(500).json(err)
     }
 });
@@ -61,6 +65,7 @@ router.delete('/:id', async (req, res) => {
 
         return res.json(user);
     } catch (err) {
+        console.log(err);
         res.status(500).json(err);
     }
 });
@@ -76,6 +81,7 @@ router.post('/:userId/friends/:friendId', async (req, res) => {
 
         return res.json(user);
     } catch (err) {
+        console.log(err);
         res.status(500).json(err);
     }
 });
@@ -89,6 +95,7 @@ router.delete('/:userId/friends/:friendId', async (req, res) => {
             return res.status(404).json({ message: 'No users with this id!' });
         }
     } catch (err) {
+        console.log(err);
         res.status(500).json(err);
     }
 });
