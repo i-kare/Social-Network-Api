@@ -28,14 +28,20 @@ router.get('/:thoughtId', async (req, res) => {
 // POST /api/thoughts - create a new thought (don't forget to push the created thought's _id to the associated user's thoughts array field)
 router.post('/', async (req, res) => {
     try {
-        const thought = await Thought.create(req.body);
-        const userID = req.body.userId;
-        User.findOneAndUpdate(
-            { _id: userID },
-            { $push: { thoughts: thought._id } },
-            { new: true }
-        )
-        res.json(thought);
+        Thought.create(req.body).then((thoughtData) => {
+            return User.findOneAndUpdate(
+                { _id: req.body.userId },
+                { $push: { thoughts: thoughtData._id } },
+                { new: true }
+            )
+        }).then(user => {
+            if (!user) {
+                res.status(404).json({ message: 'No user with this id!' });
+                return;
+            } else {
+                res.json({ message: 'Thought created!' });
+            }
+        })
     } catch (err) {
         console.log(err)
         res.status(500).json(err);
@@ -56,7 +62,7 @@ router.put('/:id', async (req, res) => {
             return res.status(404).json({ message: 'No thoughts with this id!' });
         }
 
-        res.json(thought)
+        res.json({ message: 'Thought updated!' })
     } catch (err) {
         console.log(err)
         res.status(500).json(err);
@@ -71,7 +77,7 @@ router.delete('/:id', async (req, res) => {
         if (!thought) {
             return res.status(404).json({ message: 'No thoughts with this id!' });
         }
-        res.json(thought);
+        res.json({ message: 'Thought deleted!' });
     } catch (err) {
         console.log(err)
         res.status(500).json(err);
@@ -85,7 +91,7 @@ router.post('/:thoughtId/reactions', async (req, res) => {
         if (!reaction) {
             return res.status(404).json({ message: 'No thoughts with this id!' });
         }
-        res.json(reaction);
+        res.json({ message: 'Reaction created!' });
     } catch (err) {
         res.status(500).json(err);
         console.log(err)
@@ -100,7 +106,7 @@ router.delete('/:thoughtId/reactions/:reactionId', async (req, res) => {
         if (!reaction) {
             return res.status(404).json({ message: 'No thoughts with this id!' });
         }
-        res.json(reaction);
+        res.json({ message: 'Reaction deleted!' });
     } catch (err) {
         console.log(err)
         res.status(500).json(err);
