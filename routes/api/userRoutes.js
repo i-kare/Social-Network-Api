@@ -55,15 +55,15 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/user/:id - delete a user by its _id
 router.delete('/:id', async (req, res) => {
     try {
-        const user = await User.findOneAndDelete({ _id: req.params.id });
+        User.findOneAndDelete({ _id: req.params.id }).then((user)=> {
+            if(!user) {
+                return res.status(404).json({ message: 'No users with this id!' });
+            }
 
-        if (!user) {
-            return res.status(404).json({ message: 'No users with this id!' });
-        }
+            return Thought.deleteMany({ _id : { $in: user.thoughts } });
+        })
 
-        Thought.deleteMany({ username: user.username });
-
-        return res.json(user);
+        return res.json({ message: 'User deleted and their thoughts' });
     } catch (err) {
         console.log(err);
         res.status(500).json(err);
